@@ -31,7 +31,7 @@ import eu.agileeng.util.AEStringUtil;
 public class ContributorDAO extends EmployeeDAO {
 	
 	private static String selectSQLContributors = 
-			"select empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.PERSON_ID, empl.COMPANY_ID, contr.id as contr_id, contr.owner_id as contr_owner_id from Contributor contr " 
+			"select empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.SalutationID, empl.PERSON_ID, empl.COMPANY_ID, contr.id as contr_id, contr.owner_id as contr_owner_id from Contributor contr " 
 			+ "inner join Employee empl on contr.EMPLOYEE_ID = empl.ID "
 			+ "and empl.ID in (select MAX(empl.id) from Employee empl group by empl.PERSON_ID) " 
 			+ "where empl.COMPANY_ID = ? ";
@@ -381,6 +381,7 @@ public class ContributorDAO extends EmployeeDAO {
 		empl.setBuildLazzy(true);
 		super.build(empl, rs);
 		super.postLoad(empl);
+		empl.setSalutation(Person.SalutationType.valueOf(rs.getInt("SalutationID")));
 		c.setEmployee(empl);
 		
 		// build contributor
