@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 
+import org.jboss.logging.Logger;
+
 import eu.agileeng.domain.AEDescriptive;
 import eu.agileeng.domain.AEDescriptor;
 import eu.agileeng.domain.AEException;
@@ -35,6 +37,8 @@ import eu.agileeng.persistent.dao.DAOFactory;
  */
 public class EmployeeDAO extends AbstractDAO {
 
+	protected static Logger logger = Logger.getLogger(EmployeeDAO.class);
+	
 	private static String selectSQL = "select * from employee where id = ?";
 
 	private static String selectSQLCompany = 
@@ -167,6 +171,13 @@ public class EmployeeDAO extends AbstractDAO {
 		//LastName
 		e.setLastName(rs.getString("LastName"));
 
+		//SalutationID
+		try {
+			e.setSalutation(Person.SalutationType.valueOf(rs.getInt("SalutationID")));
+		} catch(Exception exc) {
+			logger.warnf("read Employee::SalutationID field failed: {}", exc.getMessage());
+		}
+		
 		try {
 			//UIN
 			e.setUIN(rs.getString("UIN"));
@@ -176,8 +187,6 @@ public class EmployeeDAO extends AbstractDAO {
 			e.setMiddleName(rs.getString("MiddleName"));
 			//GirlName
 			e.setGirlName(rs.getString("GirlName"));
-			//SalutationID
-			e.setSalutation(Person.SalutationType.valueOf(rs.getInt("SalutationID")));
 			//DateOfBirth
 			e.setDateOfBirth(rs.getDate("DateOfBirth"));
 			//PlaceOfBirth

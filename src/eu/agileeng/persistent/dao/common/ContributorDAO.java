@@ -38,7 +38,7 @@ public class ContributorDAO extends EmployeeDAO {
 	
 	private static String selectSQLDonationsAccountancy = 
 			"select personDonation.*, "
-			+ " employees.id, employees.FirstName, employees.LastName, employees.NAME, employees.PERSON_ID, employees.COMPANY_ID from "
+			+ " employees.id, employees.FirstName, employees.LastName, employees.NAME, employees.SalutationID, employees.PERSON_ID, employees.COMPANY_ID from "
 			+ " ( "
 			+ " 	select Sum(xxx.debitTurnover) as debitTurnover, Sum(xxx.creditTurnover) as creditTurnover, xxx.accountId as accountId, xxx.accountCode as accountCode, xxx.accountName as accountName, xxx.personId as personId from "
 			+ " 	( "
@@ -55,7 +55,7 @@ public class ContributorDAO extends EmployeeDAO {
 			+ " ) as personDonation "
 			+ " left outer join " 
 			+ " ( "
-			+ "     select empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.PERSON_ID, empl.COMPANY_ID, contr.id as contr_id " 
+			+ "     select empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.SalutationID, empl.PERSON_ID, empl.COMPANY_ID, contr.id as contr_id " 
 			+ "     from Contributor contr inner join Employee empl on contr.EMPLOYEE_ID = empl.ID "
 			+ "     and empl.ID in (select MAX(empl.id) from Employee empl group by empl.PERSON_ID) " 
 			+ "     where empl.COMPANY_ID = ? "
@@ -78,7 +78,7 @@ public class ContributorDAO extends EmployeeDAO {
 			+ "select "
 			+ "		don.id as don_id, don.YEAR don_year, don.AMOUNT as don_amount, don.AMOUNT_ACC as don_amount_acc, don.AMOUNT_CHANGE as don_amount_change, don.AMOUNT_RECEIPTED as don_amount_receipted, " 
 			+ "		contr.id as max_contr_id, " 
-			+ "		empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.PERSON_ID, empl.COMPANY_ID " 
+			+ "		empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.SalutationID, empl.PERSON_ID, empl.COMPANY_ID " 
 			+ "from Contributor contr inner join Employee empl on contr.EMPLOYEE_ID = empl.ID and empl.ID in (select * from maxEmplId) "
 			+ "left outer join ( "
 			+ "		select don.* " 
@@ -89,7 +89,7 @@ public class ContributorDAO extends EmployeeDAO {
 			+ "where contr.owner_id = ? ";
 	
 	private static String selectSQLContributor = 
-			"select empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.PERSON_ID, empl.COMPANY_ID, contr.id as contr_id, contr.owner_id as contr_owner_id from Contributor contr " 
+			"select empl.id, empl.FirstName, empl.LastName, empl.NAME, empl.PERSON_ID, empl.COMPANY_ID, empl.SalutationID, contr.id as contr_id, contr.owner_id as contr_owner_id from Contributor contr " 
 			+ " inner join Employee empl on contr.EMPLOYEE_ID = empl.ID "
 			+ " where contr.id = ?";
 	
@@ -381,7 +381,6 @@ public class ContributorDAO extends EmployeeDAO {
 		empl.setBuildLazzy(true);
 		super.build(empl, rs);
 		super.postLoad(empl);
-		empl.setSalutation(Person.SalutationType.valueOf(rs.getInt("SalutationID")));
 		c.setEmployee(empl);
 		
 		// build contributor
