@@ -5,6 +5,7 @@ import org.apache.tomcat.util.json.JSONObject;
 import eu.agileeng.domain.AEDomainObject;
 import eu.agileeng.domain.DomainModel.DomainClass;
 import eu.agileeng.domain.contact.Address;
+import eu.agileeng.domain.contact.Employee;
 import eu.agileeng.domain.contact.Organization;
 import eu.agileeng.util.AEMath;
 import eu.agileeng.util.AEStringUtil;
@@ -103,9 +104,9 @@ public class ReportDataSource extends AEDomainObject {
 	}
 	
 	/**
-	 * The customer is either “PAROISSE” or “MENSE”,  based on the Parish's code
-	 *   - if code < 1000 then “PAROISSE”; 
-	 *   - if code >= 1000 then “MENSE”
+	 * The customer is either ï¿½PAROISSEï¿½ or ï¿½MENSEï¿½,  based on the Parish's code
+	 *   - if code < 1000 then ï¿½PAROISSEï¿½; 
+	 *   - if code >= 1000 then ï¿½MENSEï¿½
 	 * @return
 	 */
 	public boolean isCustomerParoisse() {
@@ -173,5 +174,45 @@ public class ReportDataSource extends AEDomainObject {
 			ret = AEMath.toAmountFrenchString(d);
 		}
 		return AEStringUtil.trim(ret);
+	}
+	
+	public final String getSalutation(Employee empl) {
+		String salutation = AEStringUtil.EMPTY_STRING;
+		if (empl != null && empl.getSalutation() != null) {
+			switch (empl.getSalutation()) {
+			case Mr:
+				salutation = "Monsieur";
+				break;
+			case Mrs:
+				salutation = "Madame";
+				break;
+			case Ms:
+				salutation = "Mademoiselle";
+				break;
+			default:
+				salutation = AEStringUtil.EMPTY_STRING;
+			}
+		}
+		return AEStringUtil.trim(salutation);
+	}
+	
+	public final String getSalutationShort(Employee empl) {
+		String salutation = AEStringUtil.EMPTY_STRING;
+		if (empl != null && empl.getSalutation() != null) {
+			switch (empl.getSalutation()) {
+			case Mr:
+				salutation = "M.";
+				break;
+			case Mrs:
+				salutation = "Mme.";
+				break;
+			case Ms:
+				salutation = "Mlle.";
+				break;
+			default:
+				salutation = AEStringUtil.EMPTY_STRING;
+			}
+		}
+		return AEStringUtil.trim(salutation);
 	}
 }

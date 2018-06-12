@@ -158,6 +158,17 @@ public class Cefra11580_03DataSource extends ReportDataSource {
 		return AEStringUtil.trim(ret);
 	}
 	
+	public String getContributorNameEx() {
+		String ret = getContributorName();
+		if(contributor != null) {
+			String salutation = getSalutationShort(contributor.getEmployee());
+			if(!AEStringUtil.isEmpty(salutation)) {
+				ret = new StringBuilder(salutation).append(" ").append(ret).toString();
+			}
+		}
+		return AEStringUtil.trim(ret);
+	}
+	
 	public String getContributorAddress() {
 		String ret = null;
 		if(contributor != null && contributor.getEmployee() != null) {
@@ -243,5 +254,14 @@ public class Cefra11580_03DataSource extends ReportDataSource {
 	 */
 	public void setPayOtherMethod(boolean payOtherMethod) {
 		this.payOtherMethod = payOtherMethod;
+	}
+	
+	public final String inWordSalutation() {
+		String salutation = "Madame, Monsieur, ";
+		if (getContributor() != null) {
+			String s = getSalutation(getContributor().getEmployee());
+			salutation = AEStringUtil.isEmpty(s) ? salutation : new StringBuilder(s).append(", ").toString();
+		}
+		return AEStringUtil.trim(salutation);
 	}
 }
