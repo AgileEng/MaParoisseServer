@@ -52,6 +52,10 @@ public class AccJournalFilter extends AEDomainObject {
 		unchecked;
 	}
 	
+	static public enum OptionValue {
+		tally;
+	}
+	
 	private FinancialTransactionTemplate.PaymentMethod paymentMethod;
 	
 	private AEDescriptor bankAccount;
@@ -229,6 +233,15 @@ public class AccJournalFilter extends AEDomainObject {
 		// tallyButton
 		if(jsonObject.has(JSONKey.tally.name())) {
 			this.tallyState = TallyState.valueOf(jsonObject.optString(JSONKey.tally.name(), TallyState.all.name()));
+		}
+		
+		// option
+		if(jsonObject.has(AEDomainObject.JSONKey.option.name())) {
+			String optionValue = jsonObject.optString(AEDomainObject.JSONKey.option.name(), AEStringUtil.EMPTY_STRING);
+			if(OptionValue.tally.name().equalsIgnoreCase(optionValue) && AEStringUtil.isEmpty(this.getAccCodeTo())) {
+				// accCodeTo should be equal to accCodeFrom
+				this.setAccCodeTo(this.getAccCodeFrom());
+			}
 		}
 	}
 

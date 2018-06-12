@@ -43,7 +43,8 @@ public abstract class AEDomainObject implements AEPersistent, AEObject, AEDescri
 		note,
 		description,
 		active,
-		system;
+		system,
+		option;
 	}
 	
 	private AEPersistentImp aEPersistent;
