@@ -1,7 +1,7 @@
 package org.apache.tomcat.util.json;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.Writer; 
 
 /*
 Copyright (c) 2006 JSON.org
