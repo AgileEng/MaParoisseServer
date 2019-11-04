@@ -51,6 +51,7 @@ import eu.agileeng.security.AuthRole;
 import eu.agileeng.security.AuthRolesSet;
 import eu.agileeng.security.AuthSubjectRoleAssoc;
 import eu.agileeng.security.PasswordHash;
+import eu.agileeng.security.AuthPrincipal.AppType;
 import eu.agileeng.security.ejb.dao.AuthPrincipalDAO;
 import eu.agileeng.security.ejb.dao.AuthRoleDAO;
 import eu.agileeng.security.ejb.dao.AuthSubjectRoleAssocDAO;
@@ -179,6 +180,13 @@ public class AuthBean extends AEBean implements AuthLocal {
 			
 			// clear password !!!
 			as.setPassword(null);
+			
+			// hardcode appType
+			if("fabrique".equalsIgnoreCase(as.getName())) {
+				as.setAppType(AppType.fabrique);
+			} else if("mense".equalsIgnoreCase(as.getName())) {
+				as.setAppType(AppType.mense);
+			}
 			
 			// notify observers
 			LogEvent afterLogin = new LogEvent();
