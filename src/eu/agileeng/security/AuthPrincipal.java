@@ -58,15 +58,23 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 		appConfig,
 		hiddenModules,
 		mustChangePassword,
-		locked;
+		locked,
+		appType;
 	}
 
+	static public enum AppType {
+		fabrique,
+		mense
+	}
+	
 	private static final Pattern [] windowsPasswordPatternArray = {
         Pattern.compile("[a-z]"),
         Pattern.compile("[A-Z]"),
         Pattern.compile("[0-9]"),
         Pattern.compile("\\W")
     };
+	
+	private AuthPrincipal.AppType appType = AuthPrincipal.AppType.fabrique;
 	
 	private AEDescriptive person;
 	
@@ -247,6 +255,9 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 		
 		// override id
 		// json.put(AEDomainObject.JSONKey.id.name(), 0L);
+		
+		// appType
+		json.put(AuthPrincipal.JSONKey.appType.name(), getAppType().name());
 		
 		// person
 		if(getPerson() != null) {
@@ -660,5 +671,19 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 			}
 		}
 		return matchCount >= 3;
+	}
+
+	/**
+	 * @return the appType
+	 */
+	public AuthPrincipal.AppType getAppType() {
+		return appType;
+	}
+
+	/**
+	 * @param appType the appType to set
+	 */
+	public void setAppType(AuthPrincipal.AppType appType) {
+		this.appType = appType;
 	}
 }
