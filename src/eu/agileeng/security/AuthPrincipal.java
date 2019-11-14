@@ -368,6 +368,7 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 			} catch (JSONException e) {}
 		}
 		
+		setAppType(AppType.valueOf(jsonObject.optString(AuthPrincipal.JSONKey.appType.name(), AppType.fabrique.name())));
 		setPassword(jsonObject.getString(AuthPrincipal.JSONKey.password.name()));
 		setFirstName(jsonObject.optString(AuthPrincipal.JSONKey.firstName.name()));
 		setMiddleName(jsonObject.optString(AuthPrincipal.JSONKey.middleName.name()));

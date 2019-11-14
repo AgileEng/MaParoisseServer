@@ -24,6 +24,7 @@ import eu.agileeng.persistent.AEPersistentUtil;
 import eu.agileeng.persistent.dao.AbstractDAO;
 import eu.agileeng.security.AuthLoginToken;
 import eu.agileeng.security.AuthPrincipal;
+import eu.agileeng.security.AuthPrincipal.AppType;
 import eu.agileeng.security.AuthPrincipalsList;
 import eu.agileeng.security.AuthRole;
 
@@ -93,12 +94,12 @@ public class AuthPrincipalDAO extends AbstractDAO {
 	    + " and party.ID = ?";
 	
 	private static String insertSQL = "insert into AuthPrincipal (CODE, NAME, DESCRIPTION, ID_COMPANY, ID_PERSON, "
-		+ "PASSWORD, IS_SYSTEM, IS_ACTIVE, FIRST_NAME, MIDDLE_NAME, LAST_NAME, E_MAIL, PHONE "
+		+ "PASSWORD, IS_SYSTEM, IS_ACTIVE, FIRST_NAME, MIDDLE_NAME, LAST_NAME, E_MAIL, PHONE, APP_TYPE "
 		+ ") values ("
-		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String updateSQLWithoutPassword = 
-		"update AuthPrincipal set CODE = ?, NAME = ?, DESCRIPTION = ?, FIRST_NAME = ?, MIDDLE_NAME = ?, LAST_NAME = ?, E_MAIL = ?, PHONE = ? where id = ?";
+		"update AuthPrincipal set CODE = ?, NAME = ?, DESCRIPTION = ?, FIRST_NAME = ?, MIDDLE_NAME = ?, LAST_NAME = ?, E_MAIL = ?, PHONE = ?, APP_TYPE = ? where id = ?";
 	
 	private static String updateSQLExternalRef = 
 		"update AuthPrincipal set external_id = ?, external_system = ? where id = ?";
@@ -181,6 +182,8 @@ public class AuthPrincipalDAO extends AbstractDAO {
 		as.setExpirationTime(rs.getTimestamp("EXPIRATION_TIME"));
 		//FAILED_LOGIN_COUNT
 		as.setFailedLoginCount(rs.getInt("FAILED_LOGIN_COUNT")); 
+		//APP_TYPE
+		as.setAppType(AppType.valueOf(rs.getString("APP_TYPE")));
 	}
 	
 	public void insert(AuthPrincipal as) throws AEException {
@@ -271,6 +274,9 @@ public class AuthPrincipalDAO extends AbstractDAO {
 		// PHONE
 		ps.setString(i++, as.getPhone());
 		
+		// APP_TYPE
+		ps.setString(i++, as.getAppType() != null ? as.getAppType().name() : AuthPrincipal.AppType.fabrique.name());
+		
 		// return the current ps position 
 		return i;
 	}
@@ -322,6 +328,9 @@ public class AuthPrincipalDAO extends AbstractDAO {
 		
 		// PHONE
 		ps.setString(i++, as.getPhone());
+		
+		// APP_TYPE
+		ps.setString(i++, as.getAppType() != null ? as.getAppType().name() : AuthPrincipal.AppType.fabrique.name());
 		
 		// return the current ps position 
 		return i;
