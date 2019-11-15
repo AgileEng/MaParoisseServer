@@ -181,12 +181,12 @@ public class AuthBean extends AEBean implements AuthLocal {
 			// clear password !!!
 			as.setPassword(null);
 			
-			// hardcode appType
-			if("fabrique".equalsIgnoreCase(as.getName())) {
-				as.setAppType(AppType.fabrique);
-			} else if("mense".equalsIgnoreCase(as.getName())) {
-				as.setAppType(AppType.mense);
-			}
+//			// hardcode appType
+//			if("fabrique".equalsIgnoreCase(as.getName())) {
+//				as.setAppType(AppType.fabrique);
+//			} else if("mense".equalsIgnoreCase(as.getName())) {
+//				as.setAppType(AppType.mense);
+//			}
 			
 			// notify observers
 			LogEvent afterLogin = new LogEvent();
