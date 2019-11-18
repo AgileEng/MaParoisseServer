@@ -61,11 +61,6 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 		locked,
 		appType;
 	}
-
-	static public enum AppType {
-		fabrique,
-		mense
-	}
 	
 	private static final Pattern [] windowsPasswordPatternArray = {
         Pattern.compile("[a-z]"),
@@ -74,7 +69,7 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
         Pattern.compile("\\W")
     };
 	
-	private AuthPrincipal.AppType appType = AuthPrincipal.AppType.fabrique;
+	private Organization.AppType appType = Organization.AppType.fabrique;
 	
 	private AEDescriptive person;
 	
@@ -368,7 +363,7 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 			} catch (JSONException e) {}
 		}
 		
-		setAppType(AppType.valueOf(jsonObject.optString(AuthPrincipal.JSONKey.appType.name(), AppType.fabrique.name())));
+		setAppType(Organization.AppType.valueOf(jsonObject.optString(AuthPrincipal.JSONKey.appType.name(), Organization.AppType.fabrique.name())));
 		setPassword(jsonObject.getString(AuthPrincipal.JSONKey.password.name()));
 		setFirstName(jsonObject.optString(AuthPrincipal.JSONKey.firstName.name()));
 		setMiddleName(jsonObject.optString(AuthPrincipal.JSONKey.middleName.name()));
@@ -677,14 +672,14 @@ public class AuthPrincipal extends AEDomainObject implements Principal {
 	/**
 	 * @return the appType
 	 */
-	public AuthPrincipal.AppType getAppType() {
+	public Organization.AppType getAppType() {
 		return appType;
 	}
 
 	/**
 	 * @param appType the appType to set
 	 */
-	public void setAppType(AuthPrincipal.AppType appType) {
+	public void setAppType(Organization.AppType appType) {
 		this.appType = appType;
 	}
 }

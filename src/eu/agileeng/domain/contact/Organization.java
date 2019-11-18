@@ -13,7 +13,6 @@ import eu.agileeng.domain.business.DepartmentAGIRC;
 import eu.agileeng.domain.business.DepartmentARRCO;
 import eu.agileeng.domain.business.TaxTypeEnum;
 import eu.agileeng.domain.cash.FinancesUtil;
-import eu.agileeng.domain.imp.AEDescriptorImp;
 
 /**
  *
@@ -39,6 +38,11 @@ public class Organization extends Party {
 		public static final String paroisseStatut = "paroisseStatut";
 		public static final String paroisseDoyenne = "paroisseDoyenne";
 		public static final String paroisseContactPerson = "paroisseContactPerson";
+	}
+	
+	static public enum AppType {
+		fabrique,
+		mense
 	}
 	
 	private OrganizationFinanceCapital financeCapital;
@@ -344,5 +348,20 @@ public class Organization extends Party {
 
 	public void setBankAccMode(long bankAccMode) {
 		this.bankAccMode = bankAccMode;
+	}
+	
+	// From 0001 to 110x these are the factories or parishes;
+	// From 9001 to 9180 they are menses.
+	public static AppType getAppType(String code) {
+		try {
+			Long lCode = Long.parseLong(code);
+			if(9001L <= lCode && lCode <= 9180L) {
+				return AppType.mense;
+			} else {
+				return AppType.fabrique;
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
+		}
 	}
 }

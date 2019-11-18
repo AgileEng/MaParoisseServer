@@ -51,7 +51,6 @@ import eu.agileeng.security.AuthRole;
 import eu.agileeng.security.AuthRolesSet;
 import eu.agileeng.security.AuthSubjectRoleAssoc;
 import eu.agileeng.security.PasswordHash;
-import eu.agileeng.security.AuthPrincipal.AppType;
 import eu.agileeng.security.ejb.dao.AuthPrincipalDAO;
 import eu.agileeng.security.ejb.dao.AuthRoleDAO;
 import eu.agileeng.security.ejb.dao.AuthSubjectRoleAssocDAO;
@@ -304,8 +303,13 @@ public class AuthBean extends AEBean implements AuthLocal {
 			}
 			
 			// register customers to specified principal
+			// filtered by principal's appType
 			for (AEDescriptor party : customersList) {
-				authPrincipal.addCompany(party.getDescriptor());
+				if(authPrincipal.getAppType() != null 
+					&& authPrincipal.getAppType().equals(Organization.getAppType(party.getCode()))) {
+					
+					authPrincipal.addCompany(party.getDescriptor());
+				}
 			}
 		} catch (Throwable t) {
 			logger.errorv("{0} in {1}#{2}: {3}", t.getClass().getSimpleName(), this.getClass().getSimpleName(), "loadInDepth", t.getMessage());
@@ -1475,6 +1479,7 @@ public class AuthBean extends AEBean implements AuthLocal {
 			ap.setPhone(null);
 			ap.setLocked(false);
 			ap.setActive(true);
+			ap.setAppType(Organization.getAppType(customer.getString(AEDomainObject.JSONKey.code.name())));
 			
 			/**
 			 * begin transaction

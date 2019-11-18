@@ -17,6 +17,7 @@ import eu.agileeng.domain.AEError;
 import eu.agileeng.domain.AEException;
 import eu.agileeng.domain.DomainModel.DomainClass;
 import eu.agileeng.domain.contact.Organization;
+import eu.agileeng.domain.contact.Organization.AppType;
 import eu.agileeng.domain.contact.Person;
 import eu.agileeng.domain.imp.AEDescriptorImp;
 import eu.agileeng.persistent.AEConnection;
@@ -24,7 +25,6 @@ import eu.agileeng.persistent.AEPersistentUtil;
 import eu.agileeng.persistent.dao.AbstractDAO;
 import eu.agileeng.security.AuthLoginToken;
 import eu.agileeng.security.AuthPrincipal;
-import eu.agileeng.security.AuthPrincipal.AppType;
 import eu.agileeng.security.AuthPrincipalsList;
 import eu.agileeng.security.AuthRole;
 
@@ -275,7 +275,7 @@ public class AuthPrincipalDAO extends AbstractDAO {
 		ps.setString(i++, as.getPhone());
 		
 		// APP_TYPE
-		ps.setString(i++, as.getAppType() != null ? as.getAppType().name() : AuthPrincipal.AppType.fabrique.name());
+		ps.setString(i++, as.getAppType() != null ? as.getAppType().name() : Organization.AppType.fabrique.name());
 		
 		// return the current ps position 
 		return i;
@@ -330,7 +330,7 @@ public class AuthPrincipalDAO extends AbstractDAO {
 		ps.setString(i++, as.getPhone());
 		
 		// APP_TYPE
-		ps.setString(i++, as.getAppType() != null ? as.getAppType().name() : AuthPrincipal.AppType.fabrique.name());
+		ps.setString(i++, as.getAppType() != null ? as.getAppType().name() : Organization.AppType.fabrique.name());
 		
 		// return the current ps position 
 		return i;

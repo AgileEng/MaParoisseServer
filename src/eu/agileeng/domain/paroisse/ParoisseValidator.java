@@ -6,6 +6,7 @@ import org.apache.tomcat.util.json.JSONObject;
 import eu.agileeng.domain.AEDomainObject;
 import eu.agileeng.domain.AEError;
 import eu.agileeng.domain.AEException;
+import eu.agileeng.util.AEStringUtil;
 import eu.agileeng.util.AEValidator;
 
 /**
@@ -43,14 +44,18 @@ public class ParoisseValidator implements AEValidator {
 				
 				//validate description/nature
 				RegexValidator dValidator = new RegexValidator("^(.{1,32})$");
-				if (!dValidator.isValid(paroisseJson.getString(AEDomainObject.JSONKey.description.name()))) {
+				if (!AEStringUtil.isEmpty(paroisseJson.getString(AEDomainObject.JSONKey.description.name())) 
+					&& !dValidator.isValid(paroisseJson.getString(AEDomainObject.JSONKey.description.name()))) {
+					
 					throw new AEException("\"Nature\" must be no more than 32 characters");
 				}
 				dValidator = null;
 				
 				//validate statut
 				RegexValidator sValidator = new RegexValidator("^(.{1,20})$");
-				if (!sValidator.isValid(paroisseJson.getString("paroisseStatut"))) {
+				if (!AEStringUtil.isEmpty(paroisseJson.getString("paroisseStatut")) 
+					&& !sValidator.isValid(paroisseJson.getString("paroisseStatut"))) {
+					
 					throw new AEException("Statut must be no more than 20 characters!");
 				}
 				sValidator = null;
