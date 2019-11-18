@@ -2477,6 +2477,15 @@ public class AccBean extends AEBean implements AccLocal {
 
 			// load BordereauParoissesList from DB
 			BordereauParoissesList bordereauParoisses = bordereauParoisseDAO.loadBordereauParoisses(compDescr, year);
+			if(Organization.AppType.mense.equals(invContext.getAuthPrincipal().getAppType())) {
+				Iterator<BordereauParoisse> iterator = bordereauParoisses.iterator();
+				while(iterator.hasNext()) {
+					BordereauParoisse bp = iterator.next();
+					if(!"14".equals(bp.getCode()) && !"16".equals(bp.getCode()) && !"20".equals(bp.getCode()) && !"22".equals(bp.getCode())) {
+						iterator.remove();
+					}
+				}
+			}
 
 			// load acc data (sum by code)
 			AccJournalDAO accJournalDAO = daoFactory.getAccJournalDAO(localConnection);
