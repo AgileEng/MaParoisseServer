@@ -2429,20 +2429,23 @@ public class FinancialTransactionBean extends AEBean implements FinancialTransac
 
 					accJournals.put(accJournal);
 				} else if(FinancialTransactionTemplate.PaymentMethod.NOUVEAU.equals(pm)) {
-					accJournal = new JSONObject();
+					// v2
+					if(!Organization.AppType.mense.equals(invContext.getAuthPrincipal().getAppType())) {
+						accJournal = new JSONObject();
 
-					accJournal.put(AEDomainObject.JSONKey.name.name(), pm.getName());
-					accJournal.put(AEDomainObject.JSONKey.code.name(), pm.getCode());
-					accJournal.put(FinancialTransaction.JSONKey.paymentMethodId.name(), pm.getId());
+						accJournal.put(AEDomainObject.JSONKey.name.name(), pm.getName());
+						accJournal.put(AEDomainObject.JSONKey.code.name(), pm.getCode());
+						accJournal.put(FinancialTransaction.JSONKey.paymentMethodId.name(), pm.getId());
 
-					// accBlackList
-					JSONArray accBlackList = new JSONArray();
-					accJournal.put(AccJournalEntry.JSONKey.accBlackList.name(), accBlackList);
+						// accBlackList
+						JSONArray accBlackList = new JSONArray();
+						accJournal.put(AccJournalEntry.JSONKey.accBlackList.name(), accBlackList);
 
-					// not modifiable
-					accJournal.put("modifiable", false);
+						// not modifiable
+						accJournal.put("modifiable", false);
 
-					accJournals.put(accJournal);
+						accJournals.put(accJournal);
+					}
 				}
 			}
 
