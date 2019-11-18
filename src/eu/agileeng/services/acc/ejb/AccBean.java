@@ -248,6 +248,36 @@ public class AccBean extends AEBean implements AccLocal {
 
 				// load accounts
 				JSONArray accounts = accountDAO.loadAccounts(coaModelId);
+				// v2
+				if(Organization.AppType.mense.equals(invContext.getAuthPrincipal().getAppType())) {
+					for (int j = 0; j < accounts.length(); j++) {
+						JSONObject account = accounts.getJSONObject(j);
+						if("1010".equalsIgnoreCase(account.getString("code"))) {
+							account.put("name", "Patrimoine");
+							account.put("description", "Patrimoine");
+						} else if("4020".equalsIgnoreCase(account.getString("code"))) {
+							account.put("name", "A reverser");
+							account.put("description", "A reverser");
+						} else if("6230".equalsIgnoreCase(account.getString("code"))) {
+							account.put("name", "Don à un Tiers");
+							account.put("description", "Don à un Tiers");
+						} 
+						
+					}
+					for (int j = 0; j < accounts.length(); j++) {
+						JSONObject account = accounts.getJSONObject(j);
+						if("7018".equalsIgnoreCase(account.getString("code"))) {
+							accounts.remove(j);
+							
+						}
+					}
+					for (int j = 0; j < accounts.length(); j++) {
+						JSONObject account = accounts.getJSONObject(j);
+						if("7030".equalsIgnoreCase(account.getString("code"))) {
+							accounts.remove(j);
+						}
+					}
+				}
 				coaModelJson.put(AccAccount.JSONKey.accounts.name(), accounts);
 
 				// load patterns
