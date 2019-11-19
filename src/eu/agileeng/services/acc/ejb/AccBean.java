@@ -2423,6 +2423,20 @@ public class AccBean extends AEBean implements AccLocal {
 			JSONArray accounts = arguments.getJSONArray(AccAccount.JSONKey.accounts.name());
 
 			/**
+			 * AccPeriod
+			 */
+			AccPeriod accPeriod = getAccPeriod(
+					ownerId, 
+					AEApp.ACCOUNTING_MODULE_ID, 
+					year - 1, 
+					localConnection);
+			
+			// validate in open period
+			if(accPeriod != null && accPeriod.isClosed()) {
+				throw AEError.System.CANNOT_INSERT_UPDATE_CLOSED_PERIOD.toException();
+			}
+			
+			/**
 			 * Insert or update in transaction
 			 */
 			localConnection.beginTransaction();
