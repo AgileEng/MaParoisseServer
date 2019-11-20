@@ -8978,7 +8978,7 @@ public class CashBean extends AEBean implements CashLocal {
 			DAOFactory daoFactory = DAOFactory.getInstance();
 			localConnection = daoFactory.getConnection(
 					(AEConnection) invContext.getProperty(AEInvocationContext.AEConnection));
-			
+						
 			// dao's
 			BankAccountDAO bankAccDAO = daoFactory.getBankAccountDAO(localConnection);
 			
@@ -9007,6 +9007,21 @@ public class CashBean extends AEBean implements CashLocal {
 			BankAccountDAO babDAO = daoFactory.getBankAccountDAO(localConnection);
 			for (Iterator<BankAccountBalance> iterator = baBalancesList.iterator(); iterator.hasNext();) {
 				BankAccountBalance bab = (BankAccountBalance) iterator.next();
+				
+				/**
+				 * AccPeriod
+				 */
+				AccPeriod accPeriod = getAccPeriod(
+						ownerId, 
+						AEApp.ACCOUNTING_MODULE_ID, 
+						bab.getBankFinalBalanceDate(), 
+						localConnection);
+				
+				// validate in open period
+				if(accPeriod != null && accPeriod.isClosed()) {
+					throw AEError.System.CANNOT_INSERT_UPDATE_CLOSED_PERIOD.toException();
+				}
+				
 				switch(bab.getPersistentState()) {
 					case NEW:
 						ensureChange(bab, bankAccountId, ownerDescr, localConnection);
