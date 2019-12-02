@@ -26,6 +26,7 @@ import eu.agileeng.persistent.AEPersistentUtil;
 import eu.agileeng.persistent.dao.AbstractDAO;
 import eu.agileeng.util.AEDateUtil;
 import eu.agileeng.util.AEMath;
+import eu.agileeng.util.AEStringUtil;
 import eu.agileeng.util.json.JSONUtil;
 
 public class AccountDAO extends AbstractDAO {
@@ -215,6 +216,10 @@ public class AccountDAO extends AbstractDAO {
 
 	// end balance management
 
+	private static String selectTip = "SELECT Tip FROM Tip Where ID = 1 order by ID ASC";
+	
+	private static String updateTip = "Update Tip Set Tip = ? Where ID = 1";
+	
 	/**
 	 * @param aeConnection
 	 * @throws AEException
@@ -1949,6 +1954,45 @@ public class AccountDAO extends AbstractDAO {
 			throw new AEException(e);
 		} finally {
 			AEConnection.close(rs);
+			AEConnection.close(ps);
+			close();
+		}
+	}
+	
+	public String loadTip() throws AEException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String tip = AEStringUtil.EMPTY_STRING;
+		try {
+			ps = getAEConnection().prepareStatement(selectTip);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				tip = rs.getString("tip");
+			}
+			return tip;
+		} catch (SQLException e) {
+			throw new AEException(e);
+		} finally {
+			AEConnection.close(rs);
+			AEConnection.close(ps);
+			close();
+		}
+	}
+	
+	public void saveTip(String tip) throws AEException {
+		PreparedStatement ps = null;
+		try {
+			// create statement
+			ps = getAEConnection().prepareStatement(updateTip);
+
+			// build statement
+			ps.setString(1, tip);
+
+			// execute
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new AEException(e.getMessage(), e);
+		} finally {
 			AEConnection.close(ps);
 			close();
 		}

@@ -33,6 +33,9 @@ public interface AccService extends AEService {
 	public AEResponse exportDaily(AERequest aeRequest,  AEInvocationContext invContext) throws AEException;
 	public AEResponse loadAccPeriodByFilter(AERequest request) throws AEException;
 	
+	public String loadTip() throws AEException;
+	public AEResponse saveTip(AERequest request, AEInvocationContext invContext) throws AEException;
+	
 	/**
 	 * Loads final balance for specified account for specified up-to-date.
 	 * 

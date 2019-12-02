@@ -3550,4 +3550,84 @@ public class AccBean extends AEBean implements AccLocal {
 			AEConnection.close(localConnection);
 		}
 	}
+
+	@Override
+	public String loadTip() throws AEException {
+		AEConnection localConnection = null;
+		try {
+			DAOFactory daoFactory = DAOFactory.getInstance();
+			localConnection = daoFactory.getConnection(localConnection);
+
+			// get DAO
+			AccountDAO accountDAO = daoFactory.getAccountDAO(localConnection);
+
+			// load tip
+			String tip = accountDAO.loadTip();
+			
+			// return tip
+			return tip;
+		} catch (Throwable t) {
+			throw new AEException(t);
+		} finally {
+			AEConnection.close(localConnection);
+		}
+	}
+
+	@Override
+	public AEResponse saveTip(AERequest aeRequest, AEInvocationContext invContext) throws AEException {
+		AEConnection localConnection = null;
+		try {
+			/**
+			 * Validate invocation context
+			 */
+			AEInvocationContextValidator invContextValidator = AEInvocationContextValidator.getInstance();
+			invContextValidator.validate(invContext);
+			AuthPrincipal ap = invContext.getAuthPrincipal();
+
+			/**
+			 * Authorize
+			 */
+			// state validation
+			if(!ap.hasAdministratorRights()) {
+				throw AEError.System.UNSUFFICIENT_RIGHTS.toException();
+			}
+
+			/**
+			 * Extract request arguments  
+			 */
+			JSONObject arguments = aeRequest.getArguments();
+			String tip = arguments.getString("tip");
+			
+			/**
+			 * Factories
+			 */
+			DAOFactory daoFactory = DAOFactory.getInstance();
+			localConnection = daoFactory.getConnection(
+					(AEConnection) invContext.getProperty(AEInvocationContext.AEConnection));
+			
+			/**
+			 * Insert or update in transaction
+			 */
+			localConnection.beginTransaction();
+			AccountDAO accDAO = daoFactory.getAccountDAO(localConnection);
+			accDAO.saveTip(tip);
+
+			/**
+			 * commit
+			 */
+			localConnection.commit();
+
+			/**
+			 * Create and return response
+			 */
+			JSONObject payload = new JSONObject();
+			return new AEResponse(payload);
+		} catch (Exception e) {
+			logger.error("saveTip failed", e);
+			AEConnection.rollback(localConnection);
+			throw new AEException(e);
+		} finally {
+			AEConnection.close(localConnection);
+		}
+	}
 }
