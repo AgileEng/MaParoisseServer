@@ -41,6 +41,7 @@ public class Organization extends Party {
 	}
 	
 	static public enum AppType {
+		nd,
 		fabrique,
 		mense
 	}
@@ -350,8 +351,15 @@ public class Organization extends Party {
 		this.bankAccMode = bankAccMode;
 	}
 	
-	// From 0001 to 110x these are the factories or parishes;
-	// From 9001 to 9180 they are menses.
+	/**
+	 * 
+	 * AppType.fabrique - From 0001 to 110x these are the factories or parishes;
+	 * AppType.mense - From 9001 to 9180 they are menses.
+	 * AppType.nd - when the type cannot be determined
+	 * 
+	 * @param code
+	 * @return
+	 */
 	public static AppType getAppType(String code) {
 		try {
 			Long lCode = Long.parseLong(code);
@@ -361,7 +369,7 @@ public class Organization extends Party {
 				return AppType.fabrique;
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException();
+			return AppType.nd;
 		}
 	}
 }
